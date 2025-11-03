@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Horse Racing System</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid #d9d9d9;
+            padding: 40px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            color: #005a9c;
+            margin-top: 0;
+        }
+        p {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 24px;
+        }
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .btn {
+            padding: 14px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .btn-admin {
+            background-color: #005a9c;
+            color: white;
+        }
+        .btn-admin:hover {
+            background-color: #004170;
+        }
+        .btn-guest {
+            background-color: #e3f2fd;
+            color: #005a9c;
+            border: 1px solid #005a9c;
+        }
+        .btn-guest:hover {
+            background-color: #d1e9fb;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h1>Horse Racing System</h1>
+        <p>Please select your role to proceed.</p>
+        <div class="button-group">
+            <a href="admin.html" class="btn btn-admin">Log in as Admin</a>
+            <a href="guest.html" class="btn btn-guest">Continue as Guest</a>
+        </div>
+    </div>
+
+</body>
+</html>

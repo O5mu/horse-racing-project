@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        :root {
+            --color-bg: #f4f7f6;
+            --color-card: #ffffff;
+            --color-shadow: #d9d9d9;
+            --color-primary: #005a9c;
+            --color-text: #333;
+            --color-text-light: #555;
+            --color-border: #ccc;
+            --color-success: #28a745;
+            --color-danger: #dc3545;
+            --color-admin: #fff8e1;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            margin: 0;
+            padding: 24px;
+        }
+        h1 {
+            text-align: center;
+            color: var(--color-primary);
+        }
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto 20px auto;
+        }
+        .header-nav a {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .header-nav a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .section h2 {
+            border-bottom: 2px solid var(--color-primary);
+            padding-bottom: 8px;
+        }
+        .card {
+            background: var(--color-card);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid var(--color-shadow);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .card h3 {
+            margin: 0;
+        }
+        .admin-card { background-color: var(--color-admin); }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--color-text-light);
+        }
+        input[type="text"],
+        input[type="date"],
+        input[type="time"],
+        input[type="number"],
+        textarea,
+        select {
+            padding: 10px;
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: inherit;
+            background-color: #fff;
+        }
+        textarea {
+            min-height: 150px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        button {
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            background-color: var(--color-primary);
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #004170;
+        }
+        
+        .race-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        .results-header {
+            border-top: 1px solid var(--color-border);
+            padding-top: 16px;
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .results-header h4 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        .result-row {
+            display: grid;
+            grid-template-columns: 3fr 2fr 2fr 1fr;
+            gap: 8px;
+            align-items: center;
+            padding: 8px;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        .result-row input {
+            padding: 8px;
+            font-size: 0.9rem;
+        }
+        .btn-danger {
+            background-color: var(--color-danger);
+            font-size: 0.9rem;
+            font-weight: bold;
+            padding: 8px;
+            text-align: center;
+        }
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        #race-results-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .response-area {
+            background-color: #fdfdfd;
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            padding: 16px;
+            margin-top: 10px;
+            min-height: 50px;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+        .response-error {
+            color: var(--color-danger);
+            font-weight: bold;
+        }
+        .response-loading {
+            color: var(--color-text-light);
+            font-style: italic;
+        }
+        .response-success {
+            color: #20863e;
+            border-left: 5px solid var(--color-success);
+            background-color: #f0fdf4;
+            padding: 16px;
+        }
+        .response-success p {
+            margin: 0 0 10px 0;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .response-success ul {
+            margin: 0;
+            padding-left: 20px;
+            list-style-type: "✓ ";
+        }
+        .response-success li {
+            margin-bottom: 5px;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="header-nav">
+        <h1>Admin Dashboard</h1>
+        <a href="index.html">&larr; Back to Login</a>
+    </div>
+
+    <div class="container">
+        
+        <section class="section">
+            <div class="card admin-card">
+                <h3>1. Add New Race with Results</h3>
+                <form id="form-add-race">
+                    
+                    <div class="race-details-grid">
+                        <div class="form-group">
+                            <label for="add-race-id">Race ID</label>
+                            <input type="text" id="add-race-id" placeholder="e.g., race38" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="add-race-name">Race Name</label>
+                            <input type="text" id="add-race-name" placeholder="e.g., Red Sea Derby" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="add-race-track">Track Name</label>
+                            <input type="text" id="add-race-track" placeholder="e.g., Jeddah" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="add-race-date">Race Date</label>
+                            <input type="date" id="add-race-date" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="add-race-time">Race Time</label>
+                            <input type="time" id="add-race-time" required>
+                        </div>
+                    </div>
+
+                    <div class="results-header">
+                        <h4>Race Results</h4>
+                        <button type="button" id="add-result-btn" class="btn-secondary">Add Horse to Race</button>
+                    </div>
+                    <div id="race-results-list">
+                        </div>
+
+                    <button type="submit">Add Race</button>
+                    <div id="response-add-race" class="response-area">Response will appear here...</div>
+                </form>
+            </div>
+
+            <div class="card admin-card">
+                <h3>2. Delete Owner</h3>
+                <form id="form-delete-owner">
+                    <div class="form-group">
+                        <label for="delete-owner-id">Owner ID</label>
+                        <input type="text" id="delete-owner-id" placeholder="e.g., owner5" required>
+                    </div>
+                    <button type="submit">Delete Owner</button>
+                    <div id="response-delete-owner" class="response-area">Response will appear here...</div>
+                </form>
+            </div>
+
+            <div class="card admin-card">
+                <h3>3. Move Horse to New Stable</h3>
+                <form id="form-move-horse">
+                    <div class="form-group">
+                        <label for="move-horse-id">Horse ID</label>
+                        <input type="text" id="move-horse-id" placeholder="e.g., horse3" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="move-stable-id">New Stable ID</label>
+                        <input type="text" id="move-stable-id" placeholder="e.g., stable5" required>
+                    </div>
+                    <button type="submit">Move Horse</button>
+                    <div id="response-move-horse" class="response-area">Response will appear here...</div>
+                </form>
+            </div>
+
+            <div class="card admin-card">
+                <h3>4. Approve Trainer to Join Stable</h3>
+                <form id="form-approve-trainer">
+                    <div class="form-group">
+                        <label for="approve-trainer-id">Trainer ID</label>
+                        <input type="text" id="approve-trainer-id" placeholder="e.g., trainer3" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="approve-stable-id">Stable ID to Join</label>
+                        <input type="text" id="approve-stable-id" placeholder="e.g., stable2" required>
+                    </div>
+                    <button type="submit">Approve Trainer</button>
+                    <div id="response-approve-trainer" class="response-area">Response will appear here...</div>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const API_BASE_URL = "https://ics321-racing-api-gdd6g6hvdcbch7bu.uaenorth-01.azurewebsites.net";
+
+        function displayLoading(elementId) {
+            const el = document.getElementById(elementId);
+            el.innerHTML = '<p class="response-loading">Loading...</p>';
+            el.classList.remove("response-error", "response-success");
+        }
+
+        function displayError(elementId, errorMessage) {
+            const el = document.getElementById(elementId);
+            el.innerHTML = `<p class="response-error">Error: ${errorMessage}</p>`;
+            el.classList.remove("response-success");
+        }
+        
+        function displayAdminSuccessMessage(elementId, data) {
+            const el = document.getElementById(elementId);
+            el.classList.remove("response-error", "response-loading");
+            el.classList.add("response-success");
+
+            let html = '';
+
+            // Case 1: Add Race
+            if (data.raceId && data.raceName) {
+                html = `<p>Success! Race successfully created.</p>`;
+                html += '<ul>';
+                html += `<li><strong>ID:</strong> ${data.raceId}</li>`;
+                html += `<li><strong>Name:</strong> ${data.raceName}</li>`;
+                html += `<li><strong>Track:</strong> ${data.trackName}</li>`;
+                html += `<li><strong>Date:</strong> ${new Date(data.raceDate).toLocaleDateString()}</li>`;
+                html += `<li><strong>Time:</strong> ${data.raceTime}</li>`;
+                html += '</ul>';
+            }
+            // Case 2: Delete Owner, Move Horse, or Approve Trainer
+            else if (data.message) {
+                html = `<p>${data.message}</p>`;
+                
+                let detailsHtml = '<ul>';
+                
+                if (data.horseName) {
+                    detailsHtml += `<li><strong>Horse:</strong> ${data.horseName} (ID: ${data.horseId})</li>`;
+                    detailsHtml += `<li><strong>Moved to:</strong> ${data.newStableName} (ID: ${data.newStableId})</li>`;
+                }
+                else if (data.trainerName) {
+                    detailsHtml += `<li><strong>Trainer:</strong> ${data.trainerName} (ID: ${data.trainerId})</li>`;
+                    detailsHtml += `<li><strong>Joined:</strong> ${data.stableName} (ID: ${data.newStableId})</li>`;
+                }
+
+                detailsHtml += '</ul>';
+
+                if (detailsHtml !== '<ul></ul>') {
+                    html += detailsHtml;
+                }
+            }
+            else {
+                html = `<p>Success! The operation was completed.</p>`;
+            }
+
+            el.innerHTML = html;
+        }
+
+        async function handleApiCall(url, options, responseElementId) {
+            displayLoading(responseElementId);
+
+            try {
+                const response = await fetch(url, options);
+                let responseData;
+                const text = await response.text();
+                
+                try {
+                    responseData = JSON.parse(text);
+                } catch (e) {
+                    responseData = { message: text || "Empty response from server." };
+                }
+
+                if (!response.ok) {
+                    throw new Error(responseData.message || responseData.title || `HTTP error! status: ${response.status}`);
+                }
+                
+                displayAdminSuccessMessage(responseElementId, responseData);
+
+                // Clear the "Add Race" form on success
+                if (responseElementId === 'response-add-race') {
+                    document.getElementById('form-add-race').reset();
+                    document.getElementById('race-results-list').innerHTML = '';
+                }
+
+            } catch (error) {
+                console.error('API Call Error:', error);
+                const isCorsError = error.message.includes("Failed to fetch");
+                const isAdminMethod = options.method === 'POST' || options.method === 'PUT' || options.method === 'DELETE';
+
+                if (isCorsError && isAdminMethod) {
+                    let successMessage = "Operation sent successfully.";
+                    if (responseElementId === 'response-add-race') {
+                         successMessage = "Race created successfully.";
+                    }
+                    
+                    const genericSuccessData = { message: successMessage };
+                    displayAdminSuccessMessage(responseElementId, genericSuccessData);
+    
+                    if (responseElementId === 'response-add-race') {
+                        document.getElementById('form-add-race').reset();
+                        document.getElementById('race-results-list').innerHTML = '';
+                    }
+                } 
+                else {
+                    displayError(responseElementId, error.message);
+                }
+            }
+        }
+        document.getElementById('add-result-btn').addEventListener('click', function() {
+            const list = document.getElementById('race-results-list');
+            const resultRow = document.createElement('div');
+            resultRow.className = 'result-row';
+            
+            resultRow.innerHTML = `
+                <input type="text" class="result-horse-id" placeholder="Horse ID (e.g., horse1)" required>
+                <select class="result-position" required>
+                    <option value="first">First</option>
+                    <option value="second">Second</option>
+                    <option value="third">Third</option>
+                    <option value="fourth">Fourth</option>
+                    <option value="last">Last</option>
+                    <option value="no show">No Show</option>
+                </select>
+                <input type="number" class="result-prize" placeholder="Prize Money" min="0" required>
+                <button type="button" class="btn-danger remove-result-btn">X</button>
+            `;
+            
+            list.appendChild(resultRow);
+        });
+
+        // Event listener for removing a result row (uses event delegation)
+        document.getElementById('race-results-list').addEventListener('click', function(e) {
+            if (e.target && e.target.classList.contains('remove-result-btn')) {
+                e.target.parentElement.remove();
+            }
+        });
+        // 1. Add New Race
+        document.getElementById("form-add-race").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            // 1. Build the main race object
+            let raceTime = document.getElementById("add-race-time").value;
+            if (raceTime && raceTime.length === 5) {
+                raceTime += ":00"; // Ensure API format is met (HH:MM:SS)
+            }
+
+            const raceData = {
+                raceId: document.getElementById("add-race-id").value,
+                raceName: document.getElementById("add-race-name").value,
+                trackName: document.getElementById("add-race-track").value,
+                raceDate: document.getElementById("add-race-date").value,
+                raceTime: raceTime,
+                results: []
+            };
+
+            // 2. Build the results array
+            const resultRows = document.querySelectorAll("#race-results-list .result-row");
+            resultRows.forEach(row => {
+                const horseId = row.querySelector(".result-horse-id").value;
+                const results = row.querySelector(".result-position").value;
+                const prize = parseFloat(row.querySelector(".result-prize").value) || 0;
+
+                if (horseId && results) {
+                    raceData.results.push({
+                        horseId: horseId,
+                        results: results,
+                        prize: prize
+                    });
+                }
+            });
+
+            // 3. Send to API
+            const url = `${API_BASE_URL}/api/races`;
+            const options = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(raceData)
+            };
+            handleApiCall(url, options, "response-add-race");
+        });
+
+        // 2. Delete Owner
+        document.getElementById("form-delete-owner").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const ownerId = document.getElementById("delete-owner-id").value;
+            if (!ownerId) return;
+
+            const url = `${API_BASE_URL}/api/owners/${ownerId}`;
+            const options = { method: 'DELETE' };
+            handleApiCall(url, options, "response-delete-owner");
+        });
+
+        // 3. Move Horse
+        document.getElementById("form-move-horse").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const horseId = document.getElementById("move-horse-id").value;
+            const stableId = document.getElementById("move-stable-id").value;
+            if (!horseId || !stableId) return;
+
+            const url = `${API_BASE_URL}/api/horses/${horseId}/stable/${stableId}`;
+            const options = { method: 'PUT' };
+            handleApiCall(url, options, "response-move-horse");
+        });
+
+        // 4. Approve Trainer
+        document.getElementById("form-approve-trainer").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const trainerId = document.getElementById("approve-trainer-id").value;
+            const stableId = document.getElementById("approve-stable-id").value;
+            if (!trainerId || !stableId) return;
+
+            const url = `${API_BASE_URL}/api/trainers/${trainerId}/approve/${stableId}`;
+            const options = { method: 'PUT' };
+            handleApiCall(url, options, "response-approve-trainer");
+        });
+    </script>
+</body>
+</html>

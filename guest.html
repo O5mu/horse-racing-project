@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guest Portal</title>
+    <style>
+        :root {
+            --color-bg: #f4f7f6;
+            --color-card: #ffffff;
+            --color-shadow: #d9d9d9;
+            --color-primary: #005a9c;
+            --color-text: #333;
+            --color-text-light: #555;
+            --color-border: #ccc;
+            --color-success: #28a745;
+            --color-danger: #dc3545;
+            --color-guest: #e3f2fd;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            margin: 0;
+            padding: 24px;
+        }
+        h1 {
+            text-align: center;
+            color: var(--color-primary);
+        }
+         .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto 20px auto;
+        }
+        .header-nav a {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .header-nav a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .section h2 {
+            border-bottom: 2px solid var(--color-primary);
+            padding-bottom: 8px;
+        }
+        .card {
+            background: var(--color-card);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid var(--color-shadow);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .card h3 {
+            margin: 0;
+        }
+        .guest-card { background-color: var(--color-guest); }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--color-text-light);
+        }
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+        button {
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            background-color: var(--color-primary);
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #004170;
+        }
+        
+        .response-area {
+            background-color: #fdfdfd;
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            padding: 16px;
+            margin-top: 10px;
+            min-height: 50px;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+        .response-error {
+            color: var(--color-danger);
+            font-weight: bold;
+        }
+        .response-loading, .response-no-results {
+            color: var(--color-text-light);
+            font-style: italic;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            text-align: left;
+            padding: 10px;
+            border-bottom: 1px solid var(--color-border);
+        }
+        th {
+            background-color: #f1f1f1;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+        tr:last-child th,
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .owner-block {
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .owner-header {
+            background-color: #f7f7f7;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .trainer-block {
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--color-primary);
+            padding-bottom: 15px;
+        }
+        .trainer-block:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .trainer-header {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .trainer-header span {
+            font-size: 0.9rem;
+            font-weight: normal;
+            background-color: #e0e0e0;
+            color: #333;
+            padding: 3px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header-nav">
+        <h1>Guest Portal</h1>
+        <a href="index.html">&larr; Back to Login</a>
+    </div>
+
+    <div class="container">
+        
+        <section class="section">
+
+            <div class="card guest-card">
+                <h3>1. Get Horses by Owner Last Name</h3>
+                <form id="form-get-horses-owner">
+                    <div class="form-group">
+                        <label for="get-owner-lastname">Owner Last Name</label>
+                        <input type="text" id="get-owner-lastname" placeholder="e.g., Mohammed" required>
+                    </div>
+                    <button type="submit">Get Horses</button>
+                    <div id="response-get-horses-owner" class="response-area">Results will appear here...</div>
+                </form>
+            </div>
+
+            <div class="card guest-card">
+                <h3>2. Get Trainers with First Place Winners</h3>
+                <form id="form-get-trainer-winners">
+                    <button type="submit">Get Winning Trainers</button>
+                    <div id="response-get-trainer-winners" class="response-area">Results will appear here...</div>
+                </form>
+            </div>
+
+            <div class="card guest-card">
+                <h3>3. Get Trainers Sorted by Total Winnings</h3>
+                <form id="form-get-trainer-winnings">
+                    <button type="submit">Get Trainers by Winnings</button>
+                    <div id="response-get-trainer-winnings" class="response-area">Results will appear here...</div>
+                </form>
+            </div>
+
+            <div class="card guest-card">
+                <h3>4. Get Track Statistics</h3>
+                <form id="form-get-track-stats">
+                    <button type="submit">Get Track Stats</button>
+                    <div id="response-get-track-stats" class="response-area">Results will appear here...</div>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const API_BASE_URL = "https://ics321-racing-api-gdd6g6hvdcbch7bu.uaenorth-01.azurewebsites.net";
+
+        function displayLoading(elementId) {
+            const el = document.getElementById(elementId);
+            el.innerHTML = '<p class="response-loading">Loading...</p>';
+            el.classList.remove("response-error");
+        }
+        function displayError(elementId, errorMessage) {
+            const el = document.getElementById(elementId);
+            el.innerHTML = `<p class="response-error">Error: ${errorMessage}</p>`;
+            el.classList.add("response-error");
+        }
+        function displayNoResults(elementId) {
+            const el = document.getElementById(elementId);
+            el.innerHTML = '<p class="response-no-results">No results found.</p>';
+            el.classList.remove("response-error");
+        }
+        async function handleApiCall(url, options, responseElementId) {
+            displayLoading(responseElementId);
+
+            try {
+                const response = await fetch(url, options);
+                let responseData;
+                const text = await response.text();
+                
+                try {
+                    responseData = JSON.parse(text);
+                } catch (e) {
+                    responseData = { message: text || "Empty response from server." };
+                }
+
+                if (!response.ok) {
+                    throw new Error(responseData.message || `HTTP error! status: ${response.status}`);
+                }
+
+                if (!responseData || (Array.isArray(responseData) && responseData.length === 0)) {
+                    displayNoResults(responseElementId);
+                    return;
+                }
+                
+                switch (responseElementId) {
+                    case 'response-get-horses-owner':
+                        displayHorsesByOwner(responseElementId, responseData);
+                        break;
+                    case 'response-get-trainer-winners':
+                        displayTrainerWinners(responseElementId, responseData);
+                        break;
+                    case 'response-get-trainer-winnings':
+                        displayTrainerWinnings(responseElementId, responseData);
+                        break;
+                    case 'response-get-track-stats':
+                        displayTrackStats(responseElementId, responseData);
+                        break;
+                    default:
+                        document.getElementById(responseElementId).textContent = JSON.stringify(responseData, null, 2);
+                }
+
+            } catch (error) {
+                console.error('API Call Error:', error);
+                displayError(responseElementId, error.message);
+            }
+        }
+        function displayTrackStats(elementId, data) {
+            let html = '<table>';
+            html += `
+                <thead>
+                    <tr>
+                        <th>Track Name</th>
+                        <th>Location</th>
+                        <th>Length (km)</th>
+                        <th>Total Races</th>
+                        <th>Total Horses</th>
+                    </tr>
+                </thead>
+                <tbody>
+            `;
+            data.forEach(track => {
+                html += `
+                    <tr>
+                        <td>${track.trackName || 'N/A'}</td>
+                        <td>${track.location || 'N/A'}</td>
+                        <td>${track.length ? track.length.toFixed(2) : 'N/A'}</td>
+                        <td>${track.totalRaces || 0}</td>
+                        <td>${track.totalHorseParticipants || 0}</td>
+                    </tr>
+                `;
+            });
+            html += '</tbody></table>';
+            document.getElementById(elementId).innerHTML = html;
+        }
+        function displayTrainerWinnings(elementId, data) {
+            let html = '<table>';
+            html += `
+                <thead>
+                    <tr>
+                        <th>Trainer</th>
+                        <th>Stable</th>
+                        <th>Total Wins</th>
+                        <th>Total Winnings</th>
+                    </tr>
+                </thead>
+                <tbody>
+            `;
+            data.forEach(trainer => {
+                const trainerName = `${trainer.trainerFirstName || ''} ${trainer.trainerLastName || ''}`;
+                const winnings = trainer.totalWinnings ? `$${trainer.totalWinnings.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '$0.00';
+                html += `
+                    <tr>
+                        <td>${trainerName.trim() || 'N/A'}</td>
+                        <td>${trainer.stableName || 'N/A'}</td>
+                        <td>${trainer.totalWins || 0}</td>
+                        <td>${winnings}</td>
+                    </tr>
+                `;
+            });
+            html += '</tbody></table>';
+            document.getElementById(elementId).innerHTML = html;
+        }
+        function displayHorsesByOwner(elementId, data) {
+            let html = '';
+            data.forEach(owner => {
+                const ownerName = `${owner.ownerFirstName || ''} ${owner.ownerLastName || ''}`;
+                html += `<div class="owner-block">`;
+                html += `<div class="owner-header">${ownerName.trim() || 'N/A'} (ID: ${owner.ownerId})</div>`;
+                
+                if (owner.horses && owner.horses.length > 0) {
+                    html += '<table>';
+                    html += `
+                        <thead>
+                            <tr>
+                                <th>Horse Name</th>
+                                <th>Age</th>
+                                <th>Gender</th>
+                                <th>Stable</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    `;
+                    owner.horses.forEach(horse => {
+                        html += `
+                            <tr>
+                                <td>${horse.horseName || 'N/A'}</td>
+                                <td>${horse.age || 'N/A'}</td>
+                                <td>${horse.gender || 'N/A'}</td>
+                                <td>${horse.stableName || 'N/A'}</td>
+                            </tr>
+                        `;
+                    });
+                    html += '</tbody></table>';
+                } else {
+                    html += '<p style="padding: 10px;">No horses found for this owner.</p>';
+                }
+                html += '</div>';
+            });
+            document.getElementById(elementId).innerHTML = html;
+        }
+        function displayTrainerWinners(elementId, data) {
+            let html = '';
+            data.forEach(trainer => {
+                const trainerName = `${trainer.trainerFirstName || ''} ${trainer.trainerLastName || ''}`;
+                html += `<div class="trainer-block">`;
+                html += `<div class="trainer-header">${trainerName.trim() || 'N/A'} <span>${trainer.firstPlaceWins || 0} First Place Wins</span></div>`;
+                html += `<p style="margin: 0 0 10px 0;"><strong>Stable:</strong> ${trainer.stableName || 'N/A'}</p>`;
+
+                if (trainer.winningHorses && trainer.winningHorses.length > 0) {
+                    html += '<table>';
+                    html += `
+                        <thead>
+                            <tr>
+                                <th>Winning Horse</th>
+                                <th>Race Name</th>
+                                <th>Prize Money</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    `;
+                    trainer.winningHorses.forEach(horse => {
+                        const prize = horse.prize ? `$${horse.prize.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '$0.00';
+                        html += `
+                            <tr>
+                                <td>${horse.horseName || 'N/A'}</td>
+                                <td>${horse.raceName || 'N/A'}</td>
+                                <td>${prize}</td>
+                            </tr>
+                        `;
+                    });
+                    html += '</tbody></table>';
+                } else {
+                    html += '<p>No first place wins listed.</p>';
+                }
+                html += '</div>';
+            });
+            document.getElementById(elementId).innerHTML = html;
+        }
+        // Get Horses by Owner Last Name
+        document.getElementById("form-get-horses-owner").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const lastName = document.getElementById("get-owner-lastname").value;
+            if (!lastName) return;
+
+            const url = `${API_BASE_URL}/api/horses/by-owner-lastname?lastName=${encodeURIComponent(lastName)}`;
+            const options = { method: 'GET' };
+            handleApiCall(url, options, "response-get-horses-owner");
+        });
+
+        // Get Trainers with First Place Winners
+        document.getElementById("form-get-trainer-winners").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const url = `${API_BASE_URL}/api/trainers/winners`;
+            const options = { method: 'GET' };
+            handleApiCall(url, options, "response-get-trainer-winners");
+        });
+
+        // Get Trainers Sorted by Total Winnings
+        document.getElementById("form-get-trainer-winnings").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const url = `${API_BASE_URL}/api/trainers/winnings`;
+            const options = { method: 'GET' };
+            handleApiCall(url, options, "response-get-trainer-winnings");
+        });
+
+        // Get Track Statistics
+        document.getElementById("form-get-track-stats").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const url = `${API_BASE_URL}/api/tracks/stats`;
+            const options = { method: 'GET' };
+            handleApiCall(url, options, "response-get-track-stats");
+        });
+    </script>
+</body>
+</html>
