@@ -12,7 +12,7 @@ This project consists of three static pages (HTML, CSS, and vanilla JavaScript) 
 This project is deployed using GitHub Pages.
 
 **You can access the live website here:**
-**[https://o5mu.github.io/horse-racing-project/]**
+**https://o5mu.github.io/horse-racing-project/**
 
 > **Note:** For the website to be fully functional, the back-end API must be running and deployed.
 
